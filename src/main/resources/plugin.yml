@@ -1,0 +1,4 @@
+name: standard-plugin
+main: pl.memexurer.standard.StandardPlugin
+version: DEV
+author: twojstary_najebany
