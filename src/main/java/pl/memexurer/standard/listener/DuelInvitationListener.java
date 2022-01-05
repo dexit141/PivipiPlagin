@@ -15,40 +15,18 @@ import pl.memexurer.standard.StandardPlugin;
 import pl.memexurer.standard.event.DuelInvitationEvent;
 
 public final class DuelInvitationListener implements Listener {
-    private static final long DELAY_TIME = 100;
-
     private final StandardPlugin plugin;
     private final Multimap<UUID, UUID> invites = MultimapBuilder
             .hashKeys()
             .arrayListValues().build();
-    private final Map<UUID, Long> delayMap = new HashMap<>();
 
     public DuelInvitationListener(StandardPlugin plugin) {
         this.plugin = plugin;
     }
 
-    private boolean doDelay(UUID player) {
-        if(delayMap.containsKey(player)) {
-            long diff = delayMap.get(player) - System.currentTimeMillis();
-            if(diff > 0) {
-                return true;
-            } else {
-                delayMap.put(player, System.currentTimeMillis() + DELAY_TIME);
-                return false;
-            }
-        }
-
-        delayMap.put(player, System.currentTimeMillis() + DELAY_TIME);
-        return false;
-    }
-
     private void invitePlayer(Player receiver, Player sender) {
         if (plugin.isInCombat(sender) || plugin.isInCombat(receiver))
             return;
-
-        if(doDelay(sender.getUniqueId())) {
-            return;
-        }
 
         DuelInvitationEvent event = new DuelInvitationEvent(receiver, sender);
         plugin.getServer().getPluginManager().callEvent(event);
